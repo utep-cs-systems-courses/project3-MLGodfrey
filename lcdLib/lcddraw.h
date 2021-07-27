@@ -5,6 +5,17 @@
 #ifndef lcddraw_included
 #define lcddraw_included
 
+extern int offsetX;
+extern int offsetY;
+
+void move_shape_Left(int x);
+void move_shape_Down(int y);
+void move_shape_Up(int y);
+void move_shape_Right(int x);
+
+
+void my_shape(u_int color);
+
 /** Draw single pixel at col, row 
  *
  *  \param col Column to draw to
