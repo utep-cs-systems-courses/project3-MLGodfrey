@@ -82,10 +82,11 @@ void main()
   or_sr(0x8);	              /**< GIE (enable interrupts) */
   
   //clearScreen(COLOR_GREEN);
-  while (0) {			/* forever */
+  while (1) {			/* forever */
     if (redrawScreen) {
       redrawScreen = 0;
-      update_shape();
+      //update_shape();
+      my_shape(COLOR_RED);
     }
 // P1OUT &= ~LED;	/* led off */
 //  or_sr(0x10);	/**< CPU OFF */
