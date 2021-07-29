@@ -3,129 +3,65 @@
 #include "lcdutils.h"
 #include "lcddraw.h"
 #include "buzzer.h"
-//#include "switches.h"
-//#include "led.h"
+#include "switches.h"
+#include "led.h"
 
 // WARNING: LCD DISPLAY USES P1.0.  Do not touch!!! 
 
 #define LED BIT6		/* note that bit zero req'd for display */
 
-#define SW1 1
-#define SW2 2
-#define SW3 4
-#define SW4 8
 
-#define SWITCHES 15*/
-
-static char 
-switch_update_interrupt_sense()
-{
-  char p2val = P2IN;
-   /*update switch interrupt to detect changes from current buttons */
-  P2IES |= (p2val & SWITCHES);	/* if switch up, sense down */
-  P2IES &= (p2val | ~SWITCHES);	/* if switch down, sense up */
-  return p2val;
-}
-
-void 
-switch_init()			/* setup switch */
-{  
-  P2REN |= SWITCHES;		/* enables resistors for switches */
-  P2IE |= SWITCHES;		/* enable interrupts from switches */
-  P2OUT |= SWITCHES;		/* pull-ups for switches */
-  P2DIR &= ~SWITCHES;		/* set switches' bits for input */
-  switch_update_interrupt_sense();
-  }
-
-int switches = 0;
-
-void
-switch_interrupt_handler()
-{
-   char p2val = switch_update_interrupt_sense();
-   switches = ~p2val & SWITCHES;
-  }
-
-
- axis zero for col, axis 1 for row
-short drawPos[2] = {10,10}, controlPos[2] = {10,10};
-short velocity[2] = {3,8}, limits[2] = {screenWidth-36, screenHeight-8};
 
 short redrawScreen = 1;
 u_int controlFontColor = COLOR_GREEN;
 
+char state1 = 1;
+
 void wdt_c_handler() //controls the speed at which the image is drawn
 {
   static int secCount = 0;
-
   secCount ++;
-  if (secCount >= 2) {		/* 10/sec @ 25  */
+  if (secCount == 2) {		/* 10/sec @ 25  */
     secCount = 0;
     redrawScreen = 1;
+    switch(state1){
+    case 1: move_shape_Left(15); state1++; break;
+    case 2: move_shape_Down(15); state1++; break;
+    case 3: move_shape_Right(15); state1++; break;
+    case 4: move_shape_Up(15); state1++; break;
+    default: state1 = 1; break;
+    }
   }
 }
-  
-void update_shape();
 
-void main()
-{
+
+void main(){
   
-P1DIR |= LED;		/**< Green led on when CPU on */
-P1OUT |= LED;
   configureClocks();
   lcd_init();
   switch_init();
   buzzer_init();
-  buzzer_set_period(0);
-  my_shape(COLOR_RED);
+ 
+
   enableWDTInterrupts();      /**< enable periodic interrupt */
-  or_sr(0x8);	              /**< GIE (enable interrupts) */
+  //  or_sr(0x8);	              /**< GIE (enable interrupts) */
+
+  P1DIR |= LED;
+  P1OUT |= LED;
   
-  clearScreen(COLOR_GREEN);
+  //clearScreen(COLOR_GREEN);
   while (1) {			/* forever */
     if (redrawScreen) {
       redrawScreen = 0;
-      update_shape();
-      //my_shape(COLOR_RED);
+      and_sr(~8);  //Disables interrupts
+      clearScreen(COLOR_GREEN);
+      my_shape(COLOR_BLUE);
+      or_sr(8);
     }
- P1OUT &= ~LED;	/* led off */
+  P1OUT &= ~LED;	/* led off */
   or_sr(0x10);	/**< CPU OFF */
   P1OUT |= LED;	/* led on */
   }
 }
 
     
-    
-void
-update_shape()
-{
-  static unsigned char row = screenHeight / 2, col = screenWidth / 2;
-  static char blue = 31, green = 0, red = 31;
-  static unsigned char step = 0;
-  if (switches & SW4) return;
-  if (step <= 60) {
-    int startCol = col - step;
-    int endCol = col + step;
-    int width = 1 + endCol - startCol;
-    // a color in this BGR encoding is BBBB BGGG GGGR RRRR
-    unsigned int color = (blue << 11) | (green << 5) | red;
-    fillRectangle(startCol, row+step, width, 1, color);
-    fillRectangle(startCol, row-step, width, 1, color);
-    if (switches & SW3) green = (green + 1) % 16;
-    if (switches & SW2) blue = (blue + 2) % 16;
-    if (switches & SW1) red = (red - 3) % 8;
-    step ++;
-  } else {
-     clearScreen(COLOR_GREEN);
-     step = 0;
-  }
-  }
-
-/* Switch on S2 */
-void
-__interrupt_vec(PORT2_VECTOR) Port_2(){
-if (P2IFG & SWITCHES) {	      /* did a button cause this interrupt? */
-  P2IFG &= ~SWITCHES;		      /* clear pending sw interrupts */
-  switch_interrupt_handler();	/* single handler for all switches */
- }
-}
