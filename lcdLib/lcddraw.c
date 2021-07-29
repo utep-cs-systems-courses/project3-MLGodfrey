@@ -9,34 +9,34 @@ int offsetX = 25;
 int offsetY = 50;
 
 
-void move_shape_Left(int x){
-  my_shape(COLOR_WHITE);
+void move_shape_Left(u_int x){
+  my_shape(COLOR_GREEN);
     offsetX-=x;
 }
-void move_shape_Right(int x){
-  my_shape(COLOR_WHITE);
+void move_shape_Right(u_int x){
+  my_shape(COLOR_GREEN);
   offsetX+=x;
 }
-void move_shape_Up(int y){
-  my_shape(COLOR_WHITE);
+void move_shape_Up(u_int y){
+  my_shape(COLOR_GREEN);
   offsetY-=y; 
 }
-void move_shape_Down(int y){
-  my_shape(COLOR_WHITE);
+void move_shape_Down(u_int y){
+  my_shape(COLOR_GREEN);
   offsetY+=y; 
 }
 
 void my_shape(u_int color){
-  fillRectangle(offsetX+1, offsetY+15, 50, 20, color);
-  fillRectangle(offsetX+15, offsetY+1, 20, 50, color);
+  //fillRectangle(offsetX+1, offsetY+15, 50, 20, color);
+  //fillRectangle(offsetX+15, offsetY+1, 20, 50, color);
 
   // Left Arrow
 
   int offsetXTL= offsetX;     // X Triangle Left
-  int offsetYTL= offsetY+49; // Y Triangle Left
+  int offsetYTL= offsetY+33; // Y Triangle Left originally +49
   
   // Right Arrow
-  int offsetXTR= offsetX+50;   // X Triangle Right
+  int offsetXTR= offsetX+33;   // X Triangle Right originally +50
   int offsetYTR= offsetY; // Y Triangle Right
 
   for(int r=0; r<25; r++){
