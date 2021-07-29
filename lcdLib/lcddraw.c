@@ -4,8 +4,8 @@
 #include "lcdutils.h"
 #include "lcddraw.h"
 
-
-int offsetX = 25;
+int my_color = COLOR_BLUE;
+int offsetX = 40;
 int offsetY = 50;
 
 

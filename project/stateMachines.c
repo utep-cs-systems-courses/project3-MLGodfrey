@@ -36,7 +36,7 @@ void state_advance(){
     my_color=COLOR_BROWN;
 }
   buzzer_set_period(0);
-  my_shape(COLOR_RED);
+ 
 }
 
 // Helper functions

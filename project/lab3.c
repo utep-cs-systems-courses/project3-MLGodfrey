@@ -21,7 +21,7 @@ void wdt_c_handler() //controls the speed at which the image is drawn
 {
   static int secCount = 0;
   secCount ++;
-  if (secCount == 2) {		/* 10/sec @ 25  */
+  if (secCount == 50) {		/* 10/sec @ 25  */
     secCount = 0;
     redrawScreen = 1;
     switch(state1){
@@ -44,7 +44,7 @@ void main(){
  
 
   enableWDTInterrupts();      /**< enable periodic interrupt */
-  //  or_sr(0x8);	              /**< GIE (enable interrupts) */
+// or_sr(0x8);	              /**< GIE (enable interrupts) */
 
   P1DIR |= LED;
   P1OUT |= LED;
@@ -55,7 +55,7 @@ void main(){
       redrawScreen = 0;
       and_sr(~8);  //Disables interrupts
       clearScreen(COLOR_GREEN);
-      my_shape(COLOR_BLUE);
+      my_shape(my_color);
       or_sr(8);
     }
   P1OUT &= ~LED;	/* led off */
