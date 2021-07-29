@@ -15,7 +15,7 @@
 #define SW3 4
 #define SW4 8
 
-#define SWITCHES 15*/
+#define SWITCHES 15
 
 static char 
 switch_update_interrupt_sense()
