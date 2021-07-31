@@ -13,7 +13,7 @@ all:lab3.elf
 lab3.elf: ${COMMON_OBJECTS} lab3.o wdt_handler.o switches.o p1_interrupt_handler.o buzzer.o stateMachines.o led.o ../lib/libTimer.a
 	${CC} ${CFLAGS} ${LDFLAGS} -o $@ $^ -lTimer -lLcd 
 switches.o: switches.h
-stateMachines.o: led.h stateMachines.h
+stateMachines.o: stateMachines.s led.h stateMachines.h
 led.o: led.c led.h
 buzzer.o: buzzer.h
 

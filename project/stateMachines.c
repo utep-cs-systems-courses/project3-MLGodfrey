@@ -33,13 +33,13 @@ void state_advance(){
   
   else if (state==4){
     buzzer_set_period(2551);
-    my_color=COLOR_BROWN;
+    my_color=COLOR_BROWN; //this is actually pink?
 }
   buzzer_set_period(0);
  
 }
 
-// Helper functions
+// Helper functions unused for this project
 void turn_on_red(){ 
   red_on=1;
   led_changed = 1;
