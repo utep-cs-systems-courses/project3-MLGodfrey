@@ -10,15 +10,18 @@
 	.text
 	.global state_advance
 	.global state
-	.extern my_color
 	.extern COLOR_RED
 	.extern COLOR_YELLOW
 	.extern COLOR_BLACK
 	.extern COLOR_BROWN
+	
+	.data
+	.extern my_color
 
 state:
 	.word 0
 jt:
+	.word default
 	.word case_1
 	.word case_2
 	.word case_3
@@ -28,6 +31,9 @@ state_advance:
 	mov &state, r12
 	add r12, r12
 	mov jt(r12), r0
+	
+default:
+	mov #1, &state
 
 case_1://didn't bother with buzzer, doesn't work in .c file anyways
 	mov &COLOR_RED, &my_color
